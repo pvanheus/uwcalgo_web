@@ -1,0 +1,4 @@
+*.pyc
+.venv/
+uwcalgo-web
+uwcalgo-web.sublime-workspace
