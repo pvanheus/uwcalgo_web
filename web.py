@@ -5,6 +5,8 @@ from flask import Flask
 from flask import render_template
 from flask.ext.misaka import Misaka
 from flask.ext.sqlalchemy import SQLAlchemy
+from flask.ext.script import Server, Manager
+from flask.ext.migrate import Migrate, MigrateCommand
 
 md = Misaka()
 app = Flask(__name__)
@@ -12,6 +14,11 @@ md.init_app(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///uwcalgo.db'
 
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
+
+manager = Manager(app)
+manager.add_command('db', MigrateCommand)
+manager.add_command('runserver', Server(debug=True))
 
 
 class Solution(db.Model):
@@ -64,4 +71,4 @@ def leaderboard():
     return render_template('leaderboard.html', **locals())
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    manager.run()
